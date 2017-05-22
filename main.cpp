@@ -78,10 +78,12 @@ int main(int argc, char* argv[]) {
     fseek(f, kernel_section_header->sh_offset + 8, SEEK_SET);
     fwrite(&inst_gold, 1, 8, f);
   } else if (subcommand == "set") {  // Set instruction bits
-    const uint64_t inst = std::stoll(argv[2], nullptr, 16);
+    const uint64_t inst = std::stoull(argv[2], nullptr, 16);
     fseek(f, kernel_section_header->sh_offset + 8, SEEK_SET);
     fwrite(&inst, 1, 8, f);
     printf("new inst = %016lx\n", inst);
+  } else {
+    printf("unsupported subcommand\n");
   }
   fclose(f);
   return 0;
