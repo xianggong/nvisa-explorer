@@ -1,0 +1,43 @@
+@?a EXIT.?b ?c;
+
+opcode: 63..52: 1110 0011 0000
+unused: 51..20
+?a: 19..16: P0..P6, PT (default, hidden), !P0..!P6, !PT
+unused: 15..6
+?b: 5..5:
+          0 default, hidden
+          1 KEEPREFCOUNT
+?c: 4..0:
+           0 CC.F
+           1 CC.LT
+           2 CC.EQ
+           3 CC.LE
+           4 CC.GT
+           5 CC.NE
+           6 CC.GE
+           7 CC.NUM
+           8 CC.NAN
+           9 CC.LTU
+          10 CC.EQU
+          11 CC.LEU
+          12 CC.GTU
+          13 CC.NEU
+          14 CC.GEU
+          15 default, hidden
+          16 CC.OFF
+          17 CC.LO
+          18 CC.SFF
+          19 CC.LS
+          20 CC.HI
+          21 CC.SFT
+          22 CC.HS
+          23 CC.OFT
+          24 CC.CSM_TA
+          25 CC.CSM_TR
+          26 CC.CSM_MX
+          27 CC.FCSM_TA
+          28 CC.FCSM_TR
+          29 CC.FCSM_MX
+          30 CC.RLE
+          31 CC.RGT
+
