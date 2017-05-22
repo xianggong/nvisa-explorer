@@ -51,32 +51,38 @@ int main(int argc, char* argv[]) {
   uint64_t inst_gold = 0;
   fseek(f, kernel_section_header->sh_offset + 8, SEEK_SET);
   fread(&inst_gold, 1, 8, f);
-  fclose(f);
   printf("inst_gold = %016lx\n", inst_gold);
-  // Change instruction bits
-  assert(argc == 3);
-  const int high_bit = std::stoi(argv[1]);
-  const int low_bit = std::stoi(argv[2]);
-  assert(high_bit >= low_bit);
-  assert(high_bit - low_bit < 63);
-  uint64_t num = 1ULL << (high_bit - low_bit + 1);
-  uint64_t inst = inst_gold;
-  for (uint64_t n = 0; n < num; ++n) {
-    uint64_t high = inst & (((1ULL << (64 - high_bit)) - 1) << (high_bit + 1));
-    uint64_t middle = n << low_bit;
-    uint64_t low = inst & ((1ULL << low_bit) - 1);
-    inst = high | middle | low;
-    FILE* f = fopen("template.cubin", "rb+");
+  // Execute subcommand
+  assert(argc >= 3);
+  const std::string subcommand = argv[1];
+  if (subcommand == "explore") {  // Explore instruction bits
+    const int high_bit = std::stoi(argv[2]);
+    const int low_bit = argc == 3? high_bit : std::stoi(argv[3]);
+    assert(high_bit >= low_bit);
+    assert(high_bit - low_bit < 63);
+    const uint64_t num = 1ULL << (high_bit - low_bit + 1);
+    uint64_t inst = inst_gold;
+    for (uint64_t n = 0; n < num; ++n) {
+      uint64_t high = inst & (((1ULL << (64 - high_bit)) - 1) << (high_bit + 1));
+      uint64_t middle = n << low_bit;
+      uint64_t low = inst & ((1ULL << low_bit) - 1);
+      inst = high | middle | low;
+      assert(f);
+      fseek(f, kernel_section_header->sh_offset + 8, SEEK_SET);
+      fwrite(&inst, 1, 8, f);
+      fflush(f);
+      printf("inst = %016lx\n", inst);
+      system("cuobjdump -sass template.cubin | grep 0008");
+    }
+    // Recover instruction bits
+    fseek(f, kernel_section_header->sh_offset + 8, SEEK_SET);
+    fwrite(&inst_gold, 1, 8, f);
+  } else if (subcommand == "set") {  // Set instruction bits
+    const uint64_t inst = std::stoll(argv[2], nullptr, 16);
     fseek(f, kernel_section_header->sh_offset + 8, SEEK_SET);
     fwrite(&inst, 1, 8, f);
-    fclose(f);
-    printf("inst = %016lx\n", inst);
-    system("cuobjdump -sass template.cubin | grep 0008");
+    printf("new inst = %016lx\n", inst);
   }
-  // Recover instruction bits
-  f = fopen("template.cubin", "rb+");
-  fseek(f, kernel_section_header->sh_offset + 8, SEEK_SET);
-  fwrite(&inst_gold, 1, 8, f);
   fclose(f);
   return 0;
 }
