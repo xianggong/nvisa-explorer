@@ -1,0 +1,11 @@
+MOV @?a R?b, c[?c][?d], ?e
+
+opcode: 63..51: 0100 1100 1001 1
+unused: 50..43
+?e: 42..39: 0x0..0xe, 0xf (default, hidden)
+?c: 38..34: 0x0..0x1f
+?d: 33..20: 0x0..0x7ffc (step 4), -0x8000..-0x4 (step 4)
+?a: 19..16: P0..P6, PT (default, hidden), !P0..!P6, !PT
+unused: 15..8
+?b: 7..0: 0..254, Z
+
