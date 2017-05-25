@@ -33,7 +33,6 @@ struct Shr : public Instruction {
     a.str = "R" + (a.reg <= 254 ? DumpAsDec(a.reg) : "Z");
     b.literal = GetBits(38, 20);
     b.str = DumpAsHex(b.literal);
-    str = pred.str + opcode.str;
     if (pred.str != "") {
       str = pred.str + " ";
     } else {

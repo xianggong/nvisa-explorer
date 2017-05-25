@@ -29,7 +29,6 @@ struct Mov : public Instruction {
         "]";
     b.literal = GetBits(42, 39);
     b.str = b.literal <= 0xe ? DumpAsHex(b.literal) : "";
-    str = pred.str + opcode.str;
     if (pred.str != "") {
       str = pred.str + " ";
     } else {
