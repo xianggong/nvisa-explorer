@@ -15,7 +15,7 @@ struct Instruction {
       hi = lo;
       lo = tmp;
     }
-    return (bits >> lo) & ((1 << (hi - lo + 1)) - 1);
+    return (bits >> lo) & ((1LL << (hi - lo + 1)) - 1);
   }
   std::string DumpAsDec(uint32_t value) {
     std::stringstream ss;
@@ -24,7 +24,11 @@ struct Instruction {
   }
   std::string DumpAsHex(int value) {
     std::stringstream ss;
-    ss << (value < 0 ? "-" : "") << "0x" << std::hex << value;
+    if (value >= 0) {
+        ss << "0x" << std::hex << value;
+    } else {
+        ss << "-0x" << std::hex << -value;
+    }
     return ss.str();
   }
   const uint64_t bits;

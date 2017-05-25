@@ -38,7 +38,7 @@ struct Ldg : public Instruction {
     d.reg = GetBits(7, 0);
     d.str = "R" + (d.reg <= 254 ? DumpAsDec(d.reg) : "Z");
     a.reg = GetBits(15, 8);
-    a.offset = GetBits(43, 20);
+    a.offset = GetBits(43, 43) ? 0xff000000 | GetBits(43, 20): GetBits(42, 20);
     a.str = "[R" + (a.reg <= 254 ? DumpAsDec(a.reg) : "Z");
     a.str += a.offset != 0 ? "+" + DumpAsHex(a.offset) + "]" : "]";
     if (pred.str != "") {

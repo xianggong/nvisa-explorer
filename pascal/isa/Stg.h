@@ -36,7 +36,7 @@ struct Stg : public Instruction {
         opcode.cache_op == 2 ? ".CI" :
         opcode.cache_op == 3 ? ".CV" : "";
     d.reg = GetBits(15, 8);
-    d.offset = GetBits(43, 20);
+    d.offset = GetBits(43, 43) ? 0xff000000 | GetBits(43, 20): GetBits(42, 20);
     d.str = "[R" + (d.reg <= 254 ? DumpAsDec(d.reg) : "Z");
     d.str += d.offset != 0 ? "+" + DumpAsHex(d.offset) + "]" : "]";
     a.reg = GetBits(7, 0);
